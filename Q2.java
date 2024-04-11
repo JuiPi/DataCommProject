@@ -97,20 +97,27 @@ public class Q2 {
 
     public static String CRC_check(String codeword, String CRC_type) {
         //TO-DO
-        return null;
+        String divisor = crcDivisors.get(CRC_type);
+        String syndrome = Mod2Div(codeword, divisor);
+        return syndrome;
     }
 
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter Dataword:");
-        String dataword = scanner.nextLine();
+        // System.out.println("Enter Dataword:");
+        // String dataword = scanner.nextLine();
+        // int word_size = dataword.length() - 1;
+        // System.out.print("Enter CRC-type:");
+        // String CRC_type = scanner.nextLine();
+
+        String dataword = "101";
         int word_size = dataword.length() - 1;
-        System.out.print("Enter CRC-type:");
-        String CRC_type = scanner.nextLine();
+        String CRC_type = "CRC-4";
         
         String codeword = CRC_gen(dataword, word_size, CRC_type);
-        System.out.println(codeword);
+        System.out.println("Codedword: " + codeword + 
+                           "\nSyndrome: " + CRC_check(codeword, CRC_type));
     }
 }
