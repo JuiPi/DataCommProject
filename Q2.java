@@ -16,7 +16,8 @@ public class Q2 {
 
     // Returns XOR of 'a' and 'b'
     // (both of same length)
-    static String Xor(String a, String b) {
+    // Reference from GeeksforGeeks
+    static String Xor(String a, String b) { 
  
         // Initialize result
         String result = "";
@@ -34,6 +35,7 @@ public class Q2 {
     }
  
     // Performs Modulo-2 division
+    // Reference from GeeksforGeeks
     static String Mod2Div(String dividend, String divisor) {
  
         // Number of bits to be XORed at a time.
@@ -117,6 +119,7 @@ public class Q2 {
         String CRC_type = "CRC-4";
         
         String codeword = CRC_gen(dataword, word_size, CRC_type);
+
         System.out.println("Codedword: " + codeword + 
                            "\nSyndrome: " + CRC_check(codeword, CRC_type));
     }
