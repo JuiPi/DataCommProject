@@ -119,8 +119,9 @@ public class Q2 {
         String CRC_type = "CRC-4";
         
         String codeword = CRC_gen(dataword, word_size, CRC_type);
+        String syndrome = CRC_check(codeword, CRC_type);
 
         System.out.println("Codedword: " + codeword + 
-                           "\nSyndrome: " + CRC_check(codeword, CRC_type));
+                           "\nSyndrome: " + syndrome);
     }
 }
