@@ -7,6 +7,7 @@ public class Q3 {
 
     private static int dataword_size = 8;
 
+    // read file using scanner
     public static String readFile(String file_path) throws FileNotFoundException {
         StringBuilder data = new StringBuilder();
         try {
@@ -25,37 +26,42 @@ public class Q3 {
         return data.toString();
     }
 
+    // convert text to binary string
     public static ArrayList<String> convertDataToBinary(String data) {
         ArrayList<String> binaryString = new ArrayList<String>();
-        char[] chars = data.toCharArray();
+        char[] chars = data.toCharArray();  // split every characters and put one chracter in array of char
 
         for (char c : chars) {
-            StringBuilder binaryChar = new StringBuilder(String.format(Integer.toBinaryString(c)).replace(" ", ""));
-            if(binaryChar.length() < dataword_size) {
+            StringBuilder binaryChar = new StringBuilder(String.format(Integer.toBinaryString(c)).replace(" ", ""));    // use stringbuilder to convert char to binary
+            if(binaryChar.length() < dataword_size) {   // add 0 in front of binary string in case of data is not 8 bits
                 binaryChar.insert(0, "0".repeat(dataword_size - binaryChar.length()));
             }
-            binaryString.add(binaryChar.toString());
+            binaryString.add(binaryChar.toString());    // add a char string into arraylist
         }
         return binaryString;
     }
 
+    // summation of binary in an arraylist
     public static String sumBinary(ArrayList<String> binaryData) {
         int sum = 0;
         for (String e : binaryData) {
-            sum += Integer.parseInt(e, 2);
+            sum += Integer.parseInt(e, 2);  // convert binary to int and sum it all
         }
-        String result = Integer.toBinaryString(sum);
+        String result = Integer.toBinaryString(sum);    // convert sum back to binary 
 
+        // in case of result over 8 bits
         while(result.length() > dataword_size) {
             sum = 0;
-            String carry = result.substring(0, result.length() - dataword_size);
-            result = result.substring(result.length() - dataword_size);
+            String carry = result.substring(0, result.length() - dataword_size);    // extract binary that is over 8 bits
+            result = result.substring(result.length() - dataword_size);     // extract binary in 8 bits
 
+            // sum carry and result
             sum += Integer.parseInt(carry, 2);
             sum += Integer.parseInt(result, 2);
             result = Integer.toBinaryString(sum);
         }
 
+        // add 0 in front of binary string in case of data is not 8 bits
         if(result.length() < dataword_size) {
             String head = "0".repeat(dataword_size - result.length());
             result = head + result;
@@ -64,6 +70,7 @@ public class Q3 {
         return result;
     }
 
+    // complement binary
     public static String complementBinary(String binaryNumber) {
         StringBuilder complement = new StringBuilder();
         for (int i = 0; i < binaryNumber.length(); i++) {
@@ -79,6 +86,7 @@ public class Q3 {
         return complement.toString();
     }
 
+    // check whether the data is correct or not
     public static void checkValidity(String validity) {
         if(validity.equals("11111111")) {
             System.out.println("    >>> PASS: No Error Detected\n");
@@ -88,6 +96,7 @@ public class Q3 {
         }
     }
     
+    // generate codeword of the data in text file and add checksum
     public static ArrayList<String> Checksum_gen(String file_path) throws FileNotFoundException {
         System.out.println("-------------------- Sender --------------------");
         String data = readFile(file_path);
@@ -105,12 +114,13 @@ public class Q3 {
         return binaryData;
     }
 
+    // check whether the data (receiver) is the same as the one generate checkSum (sender)
     public static String Checksum_check(String file_path, String checkSum) throws FileNotFoundException {
         System.out.println("-------------------- Checker --------------------");
         String data = readFile(file_path);
 
         ArrayList<String> binaryData = convertDataToBinary(data);
-        binaryData.add(checkSum);
+        binaryData.add(checkSum);   // add checksum in to data arraylist
         System.out.println("BinaryData&Checksum(lastindex): " + binaryData);
 
         String validity = sumBinary(binaryData);

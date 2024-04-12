@@ -3,8 +3,8 @@ import java.util.Scanner;
 
 public class Q2 {
     
+    // hashmap of the crc polynomial
     static HashMap<String, String> crcDivisors = new HashMap<String, String>();
-    
     static {
         crcDivisors.put("CRC-4", "11111");
         crcDivisors.put("CRC-8", "111010101");
@@ -83,22 +83,22 @@ public class Q2 {
         return tmp;
     }
 
-
+    // generate codeword with crc
     public static String CRC_gen(String dataword, int word_size, String CRC_type) {
-        String divisor = crcDivisors.get(CRC_type);
+        String divisor = crcDivisors.get(CRC_type); // get the divisor of crc type from the hashmap
         if(divisor == null) throw new IllegalArgumentException("Unsupported CRC Type");
 
-        String paddedDataword = dataword + ("0".repeat(divisor.length() - 1));
+        String paddedDataword = dataword + ("0".repeat(divisor.length() - 1));  // add extra 0 at the end of dataword
 
-        String remainder = Mod2Div(paddedDataword, divisor);
+        String remainder = Mod2Div(paddedDataword, divisor);    // divide using xor and get the remainder
 
-        String codeWord = dataword + remainder;
+        String codeWord = dataword + remainder; // add the remainder at the end of the codeword
 
         return codeWord;
     }
 
+    //
     public static String CRC_check(String codeword, String CRC_type) {
-        //TO-DO
         String divisor = crcDivisors.get(CRC_type);
         String syndrome = Mod2Div(codeword, divisor);
         return syndrome;
@@ -106,22 +106,76 @@ public class Q2 {
 
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        // System.out.println("Enter Dataword:");
-        // String dataword = scanner.nextLine();
-        // int word_size = dataword.length() - 1;
-        // System.out.print("Enter CRC-type:");
-        // String CRC_type = scanner.nextLine();
+        String samples[][] = {
+            {"1011", "CRC-4"},
+            {"0110" ,"CRC-4"},
+            {"10101100", "CRC-8"},
+            {"11010111", "CRC-8"},
+            {"1010101010101010", "CRC-16"},
+            {"1111000011110000", "CRC-16"},
+            {"0101010110101010", "RCRC-16"},
+            {"0000111100001111", "RCRC-16"},
+            {"110011001100110011001100", "CRC-24"},
+            {"101010101010101010101010", "CRC-24"},
+            {"11110000111100001111000011110000", "CRC-32"},
+            {"00110011001100110011001100110011", "CRC-32"}
+        };
 
-        String dataword = "101";
-        int word_size = dataword.length() - 1;
-        String CRC_type = "CRC-4";
-        
+        int i = 1;
+        for (String[] data : samples) {
+            System.out.println("-------------------- Sample[" + i + "]--------------------");
+            String dataword = data[0];
+            String CRC_type = data[1];
+            int word_size = data.length - 1;
+            String codeword = CRC_gen(dataword, word_size, CRC_type);
+            String CRC = codeword.substring(codeword.length() - dataword.length());
+            String syndrome = CRC_check(codeword, CRC_type);
+            System.out.println("Dataword: " + dataword + 
+                                "\nCRC-Type: " + CRC_type +
+                                "\nCRC: " + CRC +
+                                "\nCodeword: " + codeword +
+                                "\nSyndrome: " + syndrome + "\n");
+            i++;
+        }
+
+        String erroneous_samples[][] = {
+            {"0101010101010101", "CRC-4"},
+            {"1010110011001100", "CRC-4"}
+        };
+
+        String erroneous_samples_error[][] = {
+            {"0101010101001010", "CRC-4"},
+            {"1010001101001100", "CRC-4"}
+        };
+
+    for (i = 0; i < erroneous_samples.length; i++) {
+        System.out.println("\n-------------------- Erroneous Sample[" + (i + 1) + "]--------------------");
+        String dataword = erroneous_samples[i][0];
+        String CRC_type = erroneous_samples[i][1];
+        int word_size = erroneous_samples[i].length - 1;
         String codeword = CRC_gen(dataword, word_size, CRC_type);
-        String syndrome = CRC_check(codeword, CRC_type);
+        String CRC = codeword.substring(codeword.length() - dataword.length());
 
-        System.out.println("Codedword: " + codeword + 
-                           "\nSyndrome: " + syndrome);
+        // Erroneous: 5 bits change
+        dataword = erroneous_samples_error[i][0];
+
+        String syndrome = CRC_check(codeword, CRC_type);
+        System.out.println("Dataword: " + dataword + 
+                            "\nCRC-Type: " + CRC_type +
+                            "\nCRC: " + CRC +
+                            "\nCodeword: " + codeword +
+                            "\nSyndrome: " + syndrome + "\n");
+
+
+
+    }
+
+
+
+
+
+
+        
     }
 }
